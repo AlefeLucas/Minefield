@@ -1,16 +1,22 @@
 package alefelucas.minefield.model;
 
+import static alefelucas.minefield.model.CellType.EMPTY;
+
 public class Cell {
 
-    private boolean mine;
+    private CellType cellType;
     private boolean revealed;
 
-    public boolean isMine() {
-        return mine;
+    public Cell() {
+        this.cellType = EMPTY;
     }
 
-    public void placeMine() {
-        this.mine = true;
+    public CellType getCellType() {
+        return cellType;
+    }
+
+    public void setCellType(CellType cellType) {
+        this.cellType = cellType;
     }
 
     public boolean isRevealed() {
@@ -20,6 +26,5 @@ public class Cell {
     public void reveal(){
         this.revealed = true;
     }
-
 
 }
