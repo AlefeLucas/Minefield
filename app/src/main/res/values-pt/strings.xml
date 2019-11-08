@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Campo Minado</string>
+    <string name="try_again">Jogar Novamente</string>
+    <string name="you_win">Venceu</string>
+    <string name="you_lose">Perdeu</string>
+    <string name="toggle_visibility">Alternar Visibilidade</string>
+</resources>

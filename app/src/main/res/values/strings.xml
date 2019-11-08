@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Minefield</string>
+    <string name="try_again">Try Again</string>
+    <string name="you_win">You Win</string>
+    <string name="you_lose">You Lose</string>
+    <string name="toggle_visibility">Toggle visibility</string>
+</resources>
