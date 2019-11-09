@@ -1,4 +1,4 @@
-package alefelucas.minefield;
+package alefelucas.minesweeper;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("alefelucas.minefield", appContext.getPackageName());
+        assertEquals("alefelucas.minesweeper", appContext.getPackageName());
     }
 }

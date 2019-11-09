@@ -1,4 +1,4 @@
-package alefelucas.minefield;
+package alefelucas.minesweeper;
 
 import org.junit.Test;
 

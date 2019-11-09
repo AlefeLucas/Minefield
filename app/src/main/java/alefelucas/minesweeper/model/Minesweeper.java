@@ -1,13 +1,14 @@
-package alefelucas.minefield.model;
+package alefelucas.minesweeper.model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-import static alefelucas.minefield.model.CellType.*;
-import static alefelucas.minefield.model.GameStatus.LOST;
-import static alefelucas.minefield.model.GameStatus.PLAYING;
-import static alefelucas.minefield.model.GameStatus.WON;
+import static alefelucas.minesweeper.model.CellType.*;
+import static alefelucas.minesweeper.model.GameStatus.LOST;
+import static alefelucas.minesweeper.model.GameStatus.PLAYING;
+import static alefelucas.minesweeper.model.GameStatus.WON;
 
-public class Minefield {
+public class Minesweeper {
 
     private final int width;
     private final int height;
@@ -23,7 +24,8 @@ public class Minefield {
 
     private int revealedCellsQuantity;
 
-    public Minefield(int height, int width) {
+
+    public Minesweeper(int height, int width) {
         this.width = width;
         this.height = height;
 
@@ -31,50 +33,57 @@ public class Minefield {
         this.mines = new Cell[MINE_QUANTITY];
 
         for (int i = 0; i < this.cells.length; i++) {
-            System.out.print(i + ": ");
             for (int j = 0; j < this.cells[i].length; j++) {
                 this.cells[i][j] = new Cell();
-                System.out.printf("%2d ", j);
             }
-            System.out.println();
         }
         this.revealedCellsQuantity = 0;
         this.status = PLAYING;
     }
 
-    public void reveal(int x, int y) {
+
+    public ArrayList<Integer> reveal(int x, int y) {
         if (!this.initialized) {
             init(x, y);
         }
 
+        ArrayList<Integer> revealed = new ArrayList<>();
+        revealed.add(this.getWidth() * y + x);
         this.cells[y][x].reveal();
-        this.revealedCellsQuantity++;
-        System.out.println("Revealed: " +revealedCellsQuantity + "\nTO REVEAL: " + (this.width * this.height - (NEUTRALIZERS + MINE_QUANTITY)));
-        if (this.cells[y][x].getCellType() == ACTIVE_MINE)  {
+        if (this.cells[y][x].getCellType() != DEAD_MINE && this.cells[y][x].getCellType() != ACTIVE_MINE) {
+            this.revealedCellsQuantity++;
+        }
+        System.out.println("Revealed: " + revealedCellsQuantity + " of " + (this.width * this.height - (MINE_QUANTITY)));
+
+        if (this.cells[y][x].getCellType() == ACTIVE_MINE) {
             this.status = LOST;
-        } else if (this.revealedCellsQuantity > this.width * this.height - (NEUTRALIZERS + MINE_QUANTITY)) {
+        } else if (this.revealedCellsQuantity >= this.width * this.height - (MINE_QUANTITY)) {
+            System.out.println("WON - revealed: " + revealedCellsQuantity + " of " + (this.width * this.height - (MINE_QUANTITY)));
             this.status = WON;
         } else {
             this.status = PLAYING;
             if (this.getCellLabel(x, y) == ' ') {
-                spread(x, y);
+                revealed.addAll(spread(x, y));
             }
         }
+        return revealed;
     }
 
-    private void spread(int x, int y) {
+    private ArrayList<Integer> spread(int x, int y) {
         int[] neighborsDelta = {0, -1, -1, 0, 1, 0, 0, 1};
+        ArrayList<Integer> revealed = new ArrayList<>();
         for (int i = 0; i < neighborsDelta.length; i += 2) {
             int neighborX = x + neighborsDelta[i];
             int neighborY = y + neighborsDelta[i + 1];
             if (neighborX >= 0 && neighborX < this.cells[0].length) {
                 if (neighborY >= 0 && neighborY < this.cells.length) {
                     if (!this.isRevealed(neighborX, neighborY)) {
-                        reveal(neighborX, neighborY);
+                        revealed.addAll(reveal(neighborX, neighborY));
                     }
                 }
             }
         }
+        return revealed;
     }
 
     public boolean isRevealed(int x, int y) {
@@ -82,8 +91,9 @@ public class Minefield {
     }
 
     public char getCellLabel(int x, int y) {
-        if (this.cells[y][x].getCellType() == ACTIVE_MINE ||  this.cells[y][x].getCellType() == DEAD_MINE) return '*';
-        else if(this.cells[y][x].getCellType() == NEUTRALIZER) return 'N';
+        if (this.cells[y][x].getCellType() == ACTIVE_MINE || this.cells[y][x].getCellType() == DEAD_MINE)
+            return '*';
+        else if (this.cells[y][x].getCellType() == NEUTRALIZER) return 'N';
         else {
             char neighboringBombs = '0';
             int[] neighborsDelta = {-1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1};

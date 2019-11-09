@@ -1,4 +1,4 @@
-package alefelucas.minefield.model;
+package alefelucas.minesweeper.model;
 
 public enum GameStatus {
     PLAYING, LOST, WON

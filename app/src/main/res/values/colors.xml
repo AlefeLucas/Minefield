@@ -10,4 +10,9 @@
     <color name="two">#6D8168</color>
     <color name="three">#C08A8A</color>
     <color name="four">#654A77</color>
+    <color name="five">#DF731C</color>
+    <color name="six">#B60000</color>
+    <color name="seven">#502305</color>
+    <color name="eight">#490202</color>
+    <color name="text">#333333</color>
 </resources>

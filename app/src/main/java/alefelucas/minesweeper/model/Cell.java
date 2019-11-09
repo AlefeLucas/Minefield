@@ -1,6 +1,6 @@
-package alefelucas.minefield.model;
+package alefelucas.minesweeper.model;
 
-import static alefelucas.minefield.model.CellType.EMPTY;
+import static alefelucas.minesweeper.model.CellType.EMPTY;
 
 public class Cell {
 
