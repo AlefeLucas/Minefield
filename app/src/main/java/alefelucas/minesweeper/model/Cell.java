@@ -2,28 +2,33 @@ package alefelucas.minesweeper.model;
 
 import static alefelucas.minesweeper.model.CellType.EMPTY;
 
+/**
+ * Estrutura para os quadrados do campo minado.
+ * Cada célula tem um tipo de célula ({@link CellType}) e um booleano
+ * revealed que diz se a célula foi revelada ou não.
+ */
 public class Cell {
 
     private CellType cellType;
     private boolean revealed;
 
-    public Cell() {
+    Cell() {
         this.cellType = EMPTY;
     }
 
-    public CellType getCellType() {
+    CellType getCellType() {
         return cellType;
     }
 
-    public void setCellType(CellType cellType) {
+    void setCellType(CellType cellType) {
         this.cellType = cellType;
     }
 
-    public boolean isRevealed() {
+    boolean isRevealed() {
         return revealed;
     }
 
-    public void reveal(){
+    void reveal() {
         this.revealed = true;
     }
 

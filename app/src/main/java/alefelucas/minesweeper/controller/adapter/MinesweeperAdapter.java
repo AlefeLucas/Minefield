@@ -3,6 +3,7 @@ package alefelucas.minesweeper.controller.adapter;
 
 import android.graphics.Color;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,37 +23,49 @@ import alefelucas.minesweeper.model.Minesweeper;
 
 import static alefelucas.minesweeper.model.GameStatus.PLAYING;
 
-public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.MinefieldViewHolder> {
+/**
+ * Classe adapter para a {@link RecyclerView} que exibe os quadrados do jogo.
+ */
+public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.MinesweeperViewHolder> {
 
     private static final int CELL = 1;
     private Minesweeper minesweeper;
     private MainActivity context;
     private boolean showing;
 
+    /**
+     * Constrói o objeto {@link MinesweeperAdapter} dada a referência da {@link MainActivity} e o jogo {@link Minesweeper}.
+     */
     public MinesweeperAdapter(MainActivity context, Minesweeper minesweeper) {
         this.context = context;
         this.minesweeper = minesweeper;
+
     }
 
     /**
-     * Inflates the item with the layout corresponding to the viewType.
+     * Infla o item com o layout correspondente ao viewType. Como neste adapter só existe um tipo de item,
+     * é sempre retornado o {@link MinesweeperViewHolder}
      *
-     * @param viewType type of the item as returned by {@link #getItemViewType(int)}
-     * @return the corresponding {@link MinesweeperAdapter}
+     * @param viewType tipo do item retornado pelo {@link #getItemViewType(int)}
+     * @return o {@link androidx.recyclerview.widget.RecyclerView.ViewHolder} correspondente.
      */
     @NonNull
     @Override
-    public MinefieldViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MinesweeperViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == CELL) {
-            return new MinefieldViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_item, parent, false));
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+            float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+            final float scale = context.getResources().getDisplayMetrics().density;
+            int height = (int) (dpHeight * scale + 0.5f);
+            int width = (int) (dpWidth * scale + 0.5f);
+            return new MinesweeperViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_item, parent, false), height, width);
         }
         throw new IllegalStateException();
     }
 
     /**
-     * Retuns the item type in the given position. For this adapter the only type is {@link #CELL}.
-     *
-     * @return item type
+     * Retorna o tipo de item dada a posição. Para este adapter, o único tipo é {@link #CELL}.
      */
     @Override
     public int getItemViewType(int position) {
@@ -73,44 +86,19 @@ public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.
 
     }
 
+    /**
+     * Do ciclo de vida do adapter. Configura o quadrado de acordo com seu status de
+     * revelado e rótulo exibido. Define a ação para o clique/toque no quadrado.
+     */
     @Override
-    public void onBindViewHolder(@NonNull MinefieldViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MinesweeperViewHolder holder, int position) {
         int y = position / this.minesweeper.getWidth();
         int x = position % this.minesweeper.getWidth();
 
         if (showing || this.minesweeper.isRevealed(x, y)) {
             holder.cellButton.setBackgroundColor(ContextCompat.getColor(context, R.color.open_field));
-
             char cellLabel = this.minesweeper.getCellLabel(x, y);
-            switch (cellLabel) {
-                case '1':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.one));
-                    break;
-                case '2':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.two));
-                    break;
-                case '3':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.three));
-                    break;
-                case '4':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.four));
-                    break;
-                case '5':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.five));
-                    break;
-                case '6':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.six));
-                    break;
-                case '7':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.seven));
-                    break;
-                case '8':
-                    holder.cellButton.setTextColor(ContextCompat.getColor(context, R.color.eight));
-                    break;
-                case 'N':
-                    holder.cellButton.setTextColor(Color.BLACK);
-                    break;
-            }
+            setLabelColor(holder.cellButton, cellLabel);
             holder.cellButton.setText(Character.toString(cellLabel));
         } else {
             holder.cellButton.setText("");
@@ -123,7 +111,7 @@ public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.
                 int j = adapterPosition / this.minesweeper.getWidth();
                 int i = adapterPosition % this.minesweeper.getWidth();
 
-                if(!this.minesweeper.isRevealed(i, j)) {
+                if (!this.minesweeper.isRevealed(i, j)) {
 
                     ArrayList<Integer> reveal = this.minesweeper.reveal(i, j);
                     for (Integer pos : reveal) {
@@ -142,15 +130,28 @@ public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.
         });
     }
 
+    /**
+     * Define a cor do rótulo dos quadrados.
+     */
+    private void setLabelColor(Button cellButton, char cellLabel) {
+        int[] colorIds = {R.color.one, R.color.two, R.color.three, R.color.four, R.color.five, R.color.six, R.color.seven, R.color.eight};
+        if (cellLabel == 'N' || cellLabel == '*') {
+            cellButton.setTextColor(Color.BLACK);
+        } else if (cellLabel != ' ') {
+            cellButton.setTextColor(ContextCompat.getColor(context, colorIds[cellLabel - '1']));
+        }
+    }
+
+    /**
+     * Reinicia o jogo com um novo campo minado.
+     */
     public void restart(Minesweeper minesweeper) {
         this.minesweeper = minesweeper;
         this.notifyDataSetChanged();
     }
 
     /**
-     * Gets the number of items in a RecyclerView
-     *
-     * @return item quantity
+     * Obtém o número de ítens na {@link RecyclerView}
      */
     @Override
     public int getItemCount() {
@@ -159,16 +160,20 @@ public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.
 
 
     /**
-     * ViewHolder - stores the references to the views of an item
+     * ViewHolder - armazena as referências para as views de um ítem.
      */
-    class MinefieldViewHolder extends RecyclerView.ViewHolder {
+    class MinesweeperViewHolder extends RecyclerView.ViewHolder {
 
-        public Button cellButton;
+        Button cellButton;
 
-        MinefieldViewHolder(@NonNull View itemView) {
+        MinesweeperViewHolder(@NonNull View itemView, float height, float width) {
             super(itemView);
 
             cellButton = itemView.findViewById(R.id.cell_button);
+
+            cellButton.getLayoutParams().width = (int) (width / 13);
+            cellButton.getLayoutParams().height = (int) (width / 13);
+
         }
     }
 

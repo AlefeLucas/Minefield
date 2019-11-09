@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".controller.activity.MainActivity"
-    android:orientation="vertical"
-    android:layout_marginTop="30dp"
-    android:gravity="center_horizontal"
-    android:animateLayoutChanges="true">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/field_recycler_view"
-        android:layout_width="wrap_content"
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:orientation="vertical"
-        tools:scrollbars="vertical"
-        tools:spanCount="10"
-        tools:itemCount="130"
-        android:layout_marginBottom="10dp"
-        tools:listitem="@layout/cell_item"/>
+        tools:context=".controller.activity.MainActivity">
 
-    <TextView
-        android:id="@+id/status_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textColor="@color/text"
-        android:text="@string/you_win" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="30dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/field_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                tools:itemCount="130"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/cell_item"
+                tools:orientation="vertical"
+                tools:spanCount="10" />
 
-    <Button
-        android:id="@+id/try_again_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:backgroundTint="@color/colorAccent"
+            <TextView
+                android:id="@+id/status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="@string/you_win"
+                android:textColor="@color/text" />
 
-        android:text="@string/try_again"/>
 
-</LinearLayout>
+            <Button
+                android:id="@+id/try_again_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/try_again"
+                android:layout_marginBottom="10dp"
+
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </ScrollView>

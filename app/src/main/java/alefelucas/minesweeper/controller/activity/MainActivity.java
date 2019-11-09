@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,16 +17,32 @@ import java.util.Locale;
 
 import alefelucas.minesweeper.R;
 import alefelucas.minesweeper.controller.adapter.MinesweeperAdapter;
-import alefelucas.minesweeper.model.Minesweeper;
+import alefelucas.minesweeper.model.*;
 
 /**
- * The game screen
+ * ============================================= FUNCIONAMENTO ============================================= *
+ * *
+ * Esta implementação de campo minado usa as seguintes estruturas de dados:
+ * {@link Cell} - Classe que representa um quadrado do jogo.
+ * {@link Minesweeper} - Classe que representa o jogo em sí, possuindo uma matriz de {@link Cell}, métodos
+ * para revelar uma posição, obter status do jogo, obter largura/altura, obter rótulo de um quadrado pela
+ * posição, dizer se um quadrado está revelado, etc.
+ * {@link CellType} - Enumeração que define os tipos de célula.
+ * {@link GameStatus} - Enumeração que define o status do jogo.
+ * <p>
+ * O campo minado é implementado com uma {@link RecyclerView}, cujo Adapter é o {@link MinesweeperAdapter}.
+ * Cada classe possui sua própria documentação nela, com classes mais extensas possuindo documentação de
+ * cada método. Os métodos estão refatorados. Os nomes de variáveis e métodos estão todos em inglês. As
+ * string são escritas em inglês no strings.xml, possuindo tradução para o português (pt). Os ícones usados
+ * são do Material Design. As cores usadas foram obtidas do exemplos no PDF da prova.
+ * <p>
+ * ========================================================================================================= *
+ * <p>
+ * Esta classe é a Activity com a tela do jogo
  */
 public class MainActivity extends AppCompatActivity {
 
     private MenuItem visibilityMenu;
-    private MenuItem refreshMenu;
-    private MenuItem changeSizeMenu;
 
     private boolean isFieldVisible;
 
@@ -40,13 +55,14 @@ public class MainActivity extends AppCompatActivity {
     private Minesweeper minesweeper;
     private MinesweeperAdapter adapter;
 
+    private static final int[] MINE_OPTIONS = {18, 15, 12};
     private static final int[] HEIGHT_OPTIONS = {10, 13, 16};
-    private static final int DEFAULT_HEIGHT_OPTION = 1;
-    private int heightOption;
+    private static final int DEFAULT_OPTION = 1;
+    private int option;
 
 
     /**
-     * From activity's lifecycle
+     * Do ciclo de vida da Activity.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +70,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.initViews();
-        this.statusTextView.setVisibility(View.INVISIBLE);
-        this.tryAgainButton.setVisibility(View.INVISIBLE);
+        this.statusTextView.setVisibility(View.GONE);
+        this.tryAgainButton.setVisibility(View.GONE);
         this.setUpRecyclerView();
-        this.heightOption = DEFAULT_HEIGHT_OPTION;
+        this.option = DEFAULT_OPTION;
         this.tryAgainButton.setOnClickListener(v -> restart());
     }
 
+    /**
+     * Método chamado pelo {@link #adapter} quando o jogo é vencido.
+     * Exibe texto de vitória e o botão de jogar novamente.
+     */
     public void won() {
         this.statusTextView.setText(R.string.you_win);
         this.statusTextView.setVisibility(View.VISIBLE);
@@ -68,43 +88,56 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Método chamado pelo {@link #adapter} quando o jogo é perdido.
+     * Exibe texto de vitória e o botão de jogar novamente.
+     */
     public void lost() {
         this.statusTextView.setText(R.string.you_lose);
         this.statusTextView.setVisibility(View.VISIBLE);
         this.tryAgainButton.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Reinicia o jogo, esconde o botão de jogar novamente e a mensagem de texto.
+     * Remove a visibilidade de campo minado.
+     */
     private void restart() {
-        this.statusTextView.setVisibility(View.INVISIBLE);
-        this.tryAgainButton.setVisibility(View.INVISIBLE);
-        this.minesweeper = new Minesweeper(HEIGHT_OPTIONS[heightOption], SPAN_COUNT);
+        this.statusTextView.setVisibility(View.GONE);
+        this.tryAgainButton.setVisibility(View.GONE);
+        this.minesweeper = new Minesweeper(HEIGHT_OPTIONS[option], SPAN_COUNT, MINE_OPTIONS[option]);
         this.adapter.restart(minesweeper);
-        if(this.isFieldVisible){
+        if (this.isFieldVisible) {
             this.adapter.toggleVisibility();
+            this.isFieldVisible = false;
         }
     }
 
     /**
-     * Sets the layout manager and adapter for the recycler view
+     * Configura a {@link RecyclerView} e o jogo inicial.
      */
     private void setUpRecyclerView() {
         this.recyclerView.setLayoutManager(new GridLayoutManager(this, SPAN_COUNT, RecyclerView.VERTICAL, false) {
+
+            /**
+             * Solução para um defeito ainda não resolvido dos LayoutManagers.
+             */
             @Override
             public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
                 try {
                     super.onLayoutChildren(recycler, state);
                 } catch (IndexOutOfBoundsException e) {
-                    Log.e("TAG", "meet a IOOBE in RecyclerView");
+                    e.printStackTrace();
                 }
             }
         });
-        this.minesweeper = new Minesweeper(HEIGHT_OPTIONS[DEFAULT_HEIGHT_OPTION], SPAN_COUNT);
+        this.minesweeper = new Minesweeper(HEIGHT_OPTIONS[DEFAULT_OPTION], SPAN_COUNT, MINE_OPTIONS[DEFAULT_OPTION]);
         this.adapter = new MinesweeperAdapter(this, minesweeper);
         this.recyclerView.setAdapter(adapter);
     }
 
     /**
-     * Initializes the views of the activity
+     * Inicializa as views da activity.
      */
     private void initViews() {
         this.statusTextView = findViewById(R.id.status_text_view);
@@ -113,19 +146,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * From activity's lifecycle
+     * Do ciclo de vida da Activity.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         this.visibilityMenu = menu.findItem(R.id.action_visibility);
-        this.refreshMenu = menu.findItem(R.id.action_refresh);
-        this.changeSizeMenu = menu.findItem(R.id.action_size);
         return super.onCreateOptionsMenu(menu);
     }
 
     /**
-     * From activity's lifecycle
+     * Do ciclo de vida da Activity.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,12 +171,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_size:
                 String[] sizes = new String[HEIGHT_OPTIONS.length];
                 for (int i = 0; i < HEIGHT_OPTIONS.length; i++) {
-                    sizes[i] = String.format(Locale.getDefault(), "%dx%d", HEIGHT_OPTIONS[i], SPAN_COUNT);
+                    sizes[i] = String.format(Locale.getDefault(), "%dx%d (%d %s)", HEIGHT_OPTIONS[i], SPAN_COUNT, MINE_OPTIONS[i], getString(R.string.mines));
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.change_size)
                         .setItems(sizes, (dialog, which) -> {
-                            this.heightOption = which;
+                            this.option = which;
                             restart();
                         });
                 AlertDialog alertDialog = builder.create();
@@ -156,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Toggles the visibility on/off - changes the visibility icon and displays
-     * the hidden positions in the game.
+     * Alterna a visibilidade - muda o ícone de visibilidade e alterna a exibição
+     * das posições escondidas no jogo.
      */
     private void onToggleVisibility() {
         this.adapter.toggleVisibility();

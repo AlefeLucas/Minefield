@@ -5,4 +5,5 @@
     <string name="you_lose">You Lose</string>
     <string name="toggle_visibility">Toggle visibility</string>
     <string name="change_size">Change Size</string>
+    <string name="mines">Mines</string>
 </resources>

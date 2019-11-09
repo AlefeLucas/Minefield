@@ -6,4 +6,5 @@
     <string name="you_lose">Perdeu</string>
     <string name="toggle_visibility">Alternar Visibilidade</string>
     <string name="change_size">Alterar Tamanho</string>
+    <string name="mines">Minas</string>
 </resources>
