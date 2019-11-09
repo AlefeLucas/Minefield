@@ -6,6 +6,8 @@ import static alefelucas.minesweeper.model.CellType.EMPTY;
  * Estrutura para os quadrados do campo minado.
  * Cada célula tem um tipo de célula ({@link CellType}) e um booleano
  * revealed que diz se a célula foi revelada ou não.
+ *
+ * @author Álefe Lucas
  */
 public class Cell {
 

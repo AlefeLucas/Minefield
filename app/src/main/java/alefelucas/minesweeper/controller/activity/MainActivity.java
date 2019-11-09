@@ -40,6 +40,8 @@ import alefelucas.minesweeper.model.*;
  * ========================================================================================================= *
  * <p>
  * Esta classe é a Activity com a tela do jogo
+ *
+ * @author Álefe Lucas
  */
 public class MainActivity extends AppCompatActivity {
 

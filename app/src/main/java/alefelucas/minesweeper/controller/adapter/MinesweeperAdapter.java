@@ -25,6 +25,8 @@ import static alefelucas.minesweeper.model.GameStatus.PLAYING;
 
 /**
  * Classe adapter para a {@link RecyclerView} que exibe os quadrados do jogo.
+ *
+ * @author Álefe Lucas
  */
 public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.MinesweeperViewHolder> {
 

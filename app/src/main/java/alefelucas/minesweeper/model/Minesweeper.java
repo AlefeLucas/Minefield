@@ -11,6 +11,8 @@ import static alefelucas.minesweeper.model.GameStatus.WON;
 /**
  * Estrutura principal do jogo campo minado. Toda lógica básica do
  * jogo se encontra encapsulada nesta classe.
+ *
+ * @author Álefe Lucas
  */
 public class Minesweeper {
 
