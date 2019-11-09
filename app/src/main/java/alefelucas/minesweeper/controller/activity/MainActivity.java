@@ -34,7 +34,8 @@ import alefelucas.minesweeper.model.*;
  * Cada classe possui sua própria documentação nela, com classes mais extensas possuindo documentação de
  * cada método. Os métodos estão refatorados. Os nomes de variáveis e métodos estão todos em inglês. As
  * string são escritas em inglês no strings.xml, possuindo tradução para o português (pt). Os ícones usados
- * são do Material Design. As cores usadas foram obtidas do exemplos no PDF da prova.
+ * são do Material Design. As cores usadas foram obtidas do exemplos no PDF da prova. Foi testado nas APIs
+ * 19 e 28.
  * <p>
  * ========================================================================================================= *
  * <p>
