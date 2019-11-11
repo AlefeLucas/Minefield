@@ -104,8 +104,22 @@ public class MinesweeperAdapter extends RecyclerView.Adapter<MinesweeperAdapter.
             holder.cellButton.setText(Character.toString(cellLabel));
         } else {
             holder.cellButton.setText("");
-            holder.cellButton.setBackgroundColor(ContextCompat.getColor(context, R.color.field));
+            holder.cellButton.setBackgroundColor(ContextCompat.getColor(context, !this.minesweeper.isMarked(x, y) ? R.color.field : R.color.marked));
         }
+
+        holder.cellButton.setOnLongClickListener(v -> {
+            if (this.minesweeper.getStatus() == PLAYING && !this.showing) {
+                int adapterPosition = holder.getAdapterPosition();
+                int j = adapterPosition / this.minesweeper.getWidth();
+                int i = adapterPosition % this.minesweeper.getWidth();
+
+                if (!this.minesweeper.isRevealed(i, j)) {
+                    this.minesweeper.mark(i, j);
+                    this.notifyItemChanged(this.minesweeper.getWidth() * j + i);
+                }
+            }
+            return true;
+        });
 
         holder.cellButton.setOnClickListener(v -> {
             if (this.minesweeper.getStatus() == PLAYING && !this.showing) {

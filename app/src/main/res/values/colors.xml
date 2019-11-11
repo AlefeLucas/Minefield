@@ -5,6 +5,7 @@
     <color name="colorAccent">#AED47F</color>
     <color name="background">#FAFAFA</color>
     <color name="field">#B0B0B0</color>
+    <color name="marked">#F44336</color>
     <color name="open_field">#DEDEDE</color>
     <color name="one">#647BA7</color>
     <color name="two">#6D8168</color>

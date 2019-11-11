@@ -114,6 +114,18 @@ public class Minesweeper {
     }
 
     /**
+     * Retorna se a posição dada está marcada.
+     */
+    public boolean isMarked(int x, int y) {
+        return this.cells[y][x].isMarked();
+    }
+
+
+    public void mark(int x, int y){
+        this.cells[y][x].setMarked(!this.isMarked(x, y));
+    }
+
+    /**
      * Obtém o rótulo exibido na posição dada, seja vazio (espaço), número, asterísco ou a letra 'N'.
      */
     public char getCellLabel(int x, int y) {

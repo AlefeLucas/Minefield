@@ -13,6 +13,7 @@ public class Cell {
 
     private CellType cellType;
     private boolean revealed;
+    private boolean marked;
 
     Cell() {
         this.cellType = EMPTY;
@@ -34,4 +35,11 @@ public class Cell {
         this.revealed = true;
     }
 
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void setMarked(boolean marked) {
+        this.marked = marked;
+    }
 }
