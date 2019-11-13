@@ -92,7 +92,7 @@ public class Minesweeper {
      * @return Lista de inteiros contendo as posições reveladas.
      */
     private ArrayList<Integer> spread(int x, int y) {
-        int[] neighborsDelta = {0, -1, -1, 0, 1, 0, 0, 1};
+        int[] neighborsDelta = {0, -1, -1, 0, 1, 0, 0, 1, -1, 1, -1, -1, 1, 1, 1, -1};
         ArrayList<Integer> revealed = new ArrayList<>();
         for (int i = 0; i < neighborsDelta.length; i += 2) {
             int neighborX = x + neighborsDelta[i];

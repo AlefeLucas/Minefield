@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         if (this.isFieldVisible) {
             this.adapter.toggleVisibility();
             this.isFieldVisible = false;
+            this.visibilityMenu.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_visibility_off_black_24dp));
         }
     }
 
@@ -196,10 +197,10 @@ public class MainActivity extends AppCompatActivity {
     private void onToggleVisibility() {
         this.adapter.toggleVisibility();
         if (!this.isFieldVisible) {
-            this.visibilityMenu.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_visibility_off_black_24dp));
+            this.visibilityMenu.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_visibility_black_24dp));
             this.isFieldVisible = true;
         } else {
-            this.visibilityMenu.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_visibility_black_24dp));
+            this.visibilityMenu.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_visibility_off_black_24dp));
             this.isFieldVisible = false;
         }
     }

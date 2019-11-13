@@ -5,7 +5,7 @@
         android:id="@+id/action_visibility"
         android:title="@string/toggle_visibility"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_visibility_black_24dp"/>
+        android:icon="@drawable/ic_visibility_off_black_24dp"/>
     <item
         android:id="@+id/action_refresh"
         android:title="@string/try_again"
